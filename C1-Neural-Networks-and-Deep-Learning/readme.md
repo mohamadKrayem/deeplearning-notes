@@ -171,6 +171,30 @@ The fancy image below comes from [analytics vidhya][gradient-descent-img].
 
 Derivatives are crucial in backpropagation during neural network training, which uses the concept of computational graphs and the chain rule of derivatives to make the computation of thousands of parameters in neural networks more efficient.
 
+**What `dJ/dw1` means:** if I nudge *only* the weight `w1` by a tiny amount (keeping every other weight and `b` fixed), does the cost `J` go up or down, and by how much? The sign tells the direction and the size tells how strongly `J` reacts:
+
+- `dJ/dw1 > 0`: increasing `w1` makes the cost go **up**, so we should decrease `w1`.
+- `dJ/dw1 < 0`: increasing `w1` makes the cost go **down**, so we should increase `w1`.
+- `J` changes by roughly `dJ/dw1 * nudge`.
+
+In code, `dw1` is shorthand for `dJ/dw1`. This is why the update `w1 = w1 - alpha * dw1` always moves `w1` in the direction that lowers the cost.
+
+Example: one training example with `x1 = 2`, `x2 = 1`, `y = 3`, a prediction `ŷ = w1*x1 + w2*x2`, and cost `J = (ŷ - y)^2`. Start from `w1 = 1`, `w2 = 0.5`:
+
+```python
+ŷ = 1*2 + 0.5*1 = 2.5
+J = (2.5 - 3)^2 = 0.25
+
+dJ/dw1 = 2 * (ŷ - y) * x1 = 2 * (-0.5) * 2 = -2
+dJ/dw2 = 2 * (ŷ - y) * x2 = 2 * (-0.5) * 1 = -1
+
+# check: nudge only w1 by 0.001
+ŷ = 1.001*2 + 0.5*1 = 2.502
+J = (2.502 - 3)^2 = 0.248004     # J went down by ~0.002 = -2 * 0.001
+```
+
+`dJ/dw1 = -2` says: raising `w1` a little lowers the cost, at about 2 times the size of the nudge. `dJ/dw2 = -1` says `w2` matters half as much (because `x2` is half of `x1`). Gradient descent uses exactly this: `w1 = 1 - alpha * (-2)` increases `w1`, which moves the prediction toward `y = 3`.
+
 #### Computation Graph
 
 A nice illustration by [colah's blog][computation-graph-colah] can help better understand.
