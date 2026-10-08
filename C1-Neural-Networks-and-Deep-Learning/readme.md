@@ -13,6 +13,7 @@
       - [Binary Classification](#binary-classification)
       - [Logistic Regression](#logistic-regression)
       - [Logistic Regression Cost Function](#logistic-regression-cost-function)
+      - [L1 vs L2 Loss](#l1-vs-l2-loss)
       - [Gradient Descent](#gradient-descent)
       - [Derivatives](#derivatives)
       - [Computation Graph](#computation-graph)
@@ -152,6 +153,48 @@ The cost function is the average of the loss function of the entire training set
 ![lr-cost-function](img/lr-cost-function.png)
 
 The loss function measures how well the model is doing on the single training example, whereas the cost function measures how well the parameters w and b are doing on the entire training set.
+
+#### L1 vs L2 Loss
+
+A loss measures how wrong the predictions are, and training makes it smaller.
+
+**L1**, which counts mistakes in proportion to their size:
+
+![L1 = |y - ŷ|, MAE = 1/m Σ |y(i) - ŷ(i)|](img/loss-l1.svg)
+
+**L2**, which makes big mistakes count far more:
+
+![L2 = (y - ŷ)^2, MSE = 1/m Σ (y(i) - ŷ(i))^2](img/loss-l2.svg)
+
+- **Outliers:** L2 is pulled hard by them, while L1 mostly isn't.
+- **Best guess:** L1 aims for the median, while L2 aims for the mean.
+
+**Learning (gradients):**
+
+- L2: ![dL2/dŷ = 2(ŷ - y)](img/loss-l2-grad.svg) shrinks near the answer, so it settles smoothly.
+- L1: ![dL1/dŷ = ±1](img/loss-l1-grad.svg) is always the same size, so it can bounce around.
+
+**Huber** (a mix, with threshold δ): L2 for small errors, L1 for big ones.
+
+![Huber loss](img/loss-huber.svg)
+
+Use L2 for clean data (the default), L1 when there are outliers, and Huber for both.
+
+These losses are for predicting numbers. Classification uses cross-entropy (the logistic regression loss above):
+
+![L = -[y log ŷ + (1 - y) log(1 - ŷ)]](img/loss-cross-entropy.svg)
+
+**Mean vs median:**
+
+- **Mean** (average): add all the values and divide by how many there are.
+
+  ![mean = 1/n Σ x_i](img/stats-mean.svg)
+
+- **Median:** sort the values from smallest to largest and take the middle one.
+
+  ![median](img/stats-median.svg)
+
+  Here, x₍ₖ₎ means the k-th value after sorting.
 
 #### Gradient Descent
 
