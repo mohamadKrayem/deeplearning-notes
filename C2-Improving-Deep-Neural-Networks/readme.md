@@ -175,6 +175,19 @@ Related to **orthogonalization**, explained later, stay tuned!
 
 With normalization, cost function will be more round and easier to optimize when features are all on similar scales. This is a very common topic, see more on [Stack Overflow][normalizing].
 
+Which numpy `axis` to normalize along, when each row is an example and each column is a feature:
+
+- `axis=1`: make the rows (the examples) comparable to each other.
+- `axis=0`: make the columns (the features) comparable to each other.
+
+```python
+# x has shape (m, n): m examples (rows), n features (columns)
+x_rows = x / np.linalg.norm(x, axis=1, keepdims=True)    # each row (example) gets length 1
+x_cols = (x - x.mean(axis=0)) / x.std(axis=0)            # each column (feature) gets mean 0, std 1
+```
+
+Careful: in this course `X` usually has shape `(n_x, m)`, with examples as **columns**. In that layout the roles swap, so normalizing features (as in the input normalization above) uses `axis=1`.
+
 #### Vanishing / Exploding gradients
 
 - In a very deep network derivatives or slopes can sometimes get either very big or very small, maybe even exponentially, and this makes training difficult.
