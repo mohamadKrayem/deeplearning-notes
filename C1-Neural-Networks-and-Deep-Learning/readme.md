@@ -20,6 +20,7 @@
       - [Logistic Regression Gradient Descent](#logistic-regression-gradient-descent)
       - [Gradient Descent on m Examples](#gradient-descent-on-m-examples)
       - [Derivation of dL/dz](#derivation-of-dldz)
+      - [The Training Pipeline at a Glance](#the-training-pipeline-at-a-glance)
     - [Python and Vectorization](#python-and-vectorization)
       - [Vectorization](#vectorization)
       - [Vectorizing Logistic Regression](#vectorizing-logistic-regression)
@@ -271,6 +272,23 @@ As you can see above, to update parameters one step, we have to go throught all 
 #### Derivation of dL/dz
 
 You may be wondering why `dz=a-y` in the above code is calculated this way and where it comes from. Here is a [detailed derivation process of dl/dz][discussion-dz] on discussion forum.
+
+#### The Training Pipeline at a Glance
+
+Here are the steps of training a model, with where each one fits:
+
+1. **Collect data:** gather examples with their labels (images plus "cat" or "dog").
+2. **Preprocess:** clean the data and **normalize** it, so all features are on a similar scale. ← **Normalization is used here**, before training, to make gradient descent converge faster. See [Normalizing inputs](../C2-Improving-Deep-Neural-Networks/readme.md#normalizing-inputs).
+3. **Initialize parameters:** set the starting weights `w` and bias `b`, usually to small random values.
+4. **Forward pass:** compute `z = wᵀx + b`, apply the activations, and get a prediction. ← **Softmax is used here**, at the **last layer**, to turn the output scores into class probabilities. Sigmoid plays this role when there are only two classes. See [Softmax Regression](../C2-Improving-Deep-Neural-Networks/readme.md#softmax-regression).
+5. **Compute the loss:** measure how wrong the predictions are (the cost `J`).
+6. **Backward pass:** compute the derivatives `dw` and `db`, which show how to change each parameter to lower the loss (see [Derivatives](#derivatives)).
+7. **Update:** `w := w − α·dw`, `b := b − α·db` (gradient descent).
+8. **Repeat steps 4–7** many times, until the loss stops improving.
+9. **Evaluate:** test on data the model has never seen.
+10. **Predict:** use the trained model on new data. New inputs get the **same normalization** as the training data, and the output goes through softmax again.
+
+In short, normalization prepares the input, and softmax interprets the output.
 
 ### Python and Vectorization
 
